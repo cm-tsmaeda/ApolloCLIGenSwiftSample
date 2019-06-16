@@ -40,6 +40,11 @@ input/query
 npm run schema
 ```
 
+保存先
+```
+output/github_schema.json
+```
+
 ## Swiftファイルの書き出し
 
 以下のコマンドでSwiftファイルが出力されます。
