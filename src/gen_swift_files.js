@@ -42,6 +42,10 @@ async function getFilePathList(inputDirPath, outputDirPath) {
                 return;
             }
             files.forEach((file) => {
+                // ファイル名が . から始まる場合は何もしない
+                if (file.length > 0 && file.substr(0, 1) == ".") {
+                    return;
+                }
                 let fileComps = file.split('.');
                 const filePath = {
                     input: inputDirPath + "/" + file,
