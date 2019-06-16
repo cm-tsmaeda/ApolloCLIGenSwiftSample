@@ -1,9 +1,11 @@
 # Apollo CLI for iOS swift サンプル
 
-Apollo CLIを使って、swiftファイルを書き出すサンプル。
+Apollo CLIを使って、Swiftファイルを書き出すサンプル。
 
 このサンプルではGithubのgraphqlAPIにアクセスします。<br>
 https://developer.github.com/v4/guides/using-the-explorer/
+
+`input/query` `input/mutation` にある *.graphql ファイルをSwiftファイルに変換して `output` に格納します。
 
 ## インストール
 
