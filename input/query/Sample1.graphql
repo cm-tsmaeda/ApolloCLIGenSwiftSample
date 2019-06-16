@@ -1,0 +1,6 @@
+query SampleViewer {
+    viewer {
+        name
+        login
+    }
+}

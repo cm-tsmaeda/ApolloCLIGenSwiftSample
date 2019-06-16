@@ -1,0 +1,15 @@
+{
+  "name": "ApolloCLISample",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "apollo": "^2.12.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "schema": "node ./src/download_schema.js",
+    "codegen": "node ./src/gen_swift_files.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
