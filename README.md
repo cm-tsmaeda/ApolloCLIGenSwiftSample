@@ -26,10 +26,10 @@ src/settings.js
 ## Query / Mutation ファイルを作成
 
 ```
-input/query
+inputフォルダ
 ```
 
-の中にGraphQLファイルを作成します。<br>
+の中にQueryやMutationのGraphQLファイルを複数作成します。（1枚のみでも可）<br>
 ここでは  `Sample1.graphql` としました。<br>
 このファイル名がそのまま書き出し後の swift ファイルになります。
 
