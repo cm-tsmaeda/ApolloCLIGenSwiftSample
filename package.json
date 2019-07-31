@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
-    "apollo": "^2.12.5"
+    "apollo": "^2.16.2"
   },
   "devDependencies": {},
   "scripts": {
