@@ -2,19 +2,37 @@ const exec = require('child_process').exec;
 const fs = require('fs');
 const settings = require('./settings');
 
-function buildCommand(queryPath, swiftPath){
+const WORKING_FILE_PATH = "./input/temp.graphql";
+
+function removeLastFileSeparatorIfNeeds(path) {
+    if(path.length === 0){
+        return "";
+    }
+    let lastChar = path.substr(-1);
+    if(lastChar === '/'){
+        return path.substr(0, path.length - 1);
+    }
+    return path;
+}
+
+function buildCodeGenCommand(graphqlPath, swiftPath){
     const mainCommand = "apollo client:codegen";
     const parameters = {
-        "includes": queryPath,
+        "includes": graphqlPath,
         "localSchemaFile": `${settings.schemaPath}`,
-        "target": "swift"
+        "target": "swift",
+        "passthroughCustomScalars" : null
     };
     const output = swiftPath;
 
     let result = mainCommand;
     result += ` ${output}`;
     for(let key in parameters){
-        result += ` --${key}="${parameters[key]}"`;
+        if(parameters[key] === null) {
+            result += ` --${key}`;
+        } else {
+            result += ` --${key}="${parameters[key]}"`;
+        }
     }
     return result;
 }
@@ -33,59 +51,44 @@ async function executeCommand(command) {
     });
 }
 
-async function getFilePathList(inputDirPath, outputDirPath) {
+async function removeFileIfExists(filePath) {
     return new Promise((resolve, reject) => {
-        let list = [];
-        fs.readdir(inputDirPath, (err, files)=>{
-            if (err) {
-                reject(err);
+        fs.access(filePath, fs.F_OK, (accessError)=>{
+            if (accessError) {
+                // 存在しないので成功とする
+                resolve(true);
                 return;
             }
-            files.forEach((file) => {
-                // ファイル名が . から始まる場合は何もしない
-                if (file.length > 0 && file.substr(0, 1) == ".") {
+            fs.unlink(filePath, (removeError)=>{
+                if(removeError){
+                    reject(removeError);
                     return;
                 }
-                let fileComps = file.split('.');
-                const filePath = {
-                    input: inputDirPath + "/" + file,
-                    output: outputDirPath + "/" + fileComps[0] + ".swift"
-                }
-                list.push(filePath);
+                resolve(true);
             })
-            resolve(list);
         });
     });
 }
 
-async function generateCode(index, list) {
-    if (list.length == 0) {
-        return;
-    }
-    const filePath = list[index];
-    const command = buildCommand(filePath.input, filePath.output);
-    console.log(command);
-    const result = await executeCommand(command);
-    console.log(result);
-    index++;
-    if (index >= list.length) {
-        console.log('generating codes complete');
-    } else {
-        await generateCode(index, list);
-    }
+async function concatGraphQLFiles(inputDir) {
+    return new Promise(async (resolve, reject) => {
+        let modifiedInputPath = removeLastFileSeparatorIfNeeds(inputDir);
+        let concatCommand = `cat ${modifiedInputPath}/*.graphql > ${WORKING_FILE_PATH}`;
+        console.log('command: ', concatCommand);
+        await executeCommand(concatCommand);
+        resolve(WORKING_FILE_PATH);
+    });
 }
 
 async function main() {
-    // query
-    let list = await getFilePathList(settings.inputQueryDirPath,
-                                     settings.outputQuerySwiftDirPath);
-    await generateCode(0, list);
-
-    // mutation
-    list = await getFilePathList(settings.inputMutationDirPath,
-                                 settings.outputMutationSwiftDirPath);
-    await generateCode(0, list);
+    await removeFileIfExists(WORKING_FILE_PATH);
+    await concatGraphQLFiles(settings.inputDirPath);
+    const swiftPath = removeLastFileSeparatorIfNeeds(settings.outputSwiftDirPath) + "/" + settings.outputSwiftFileName;
+    const command = buildCodeGenCommand(WORKING_FILE_PATH, swiftPath);
+    console.log(command);
+    const result = await executeCommand(command);
+    console.log(result);
+    await removeFileIfExists(WORKING_FILE_PATH);
 }
 
 main();
-

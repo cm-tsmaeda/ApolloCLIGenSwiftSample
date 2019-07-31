@@ -7,23 +7,19 @@ const authToken = "Your token is here!";
 // スキーマの出力パス
 const schemaPath = "./output/github_schema.json";
 
-// 入力Queryファイルのディレクトリ
-const inputQueryDirPath = "./input/query";
+// 入力ファイルのディレクトリ
+const inputDirPath = "./input";
 
-// 入力Mutationファイルのディレクトリ
-const inputMutationDirPath = "./input/mutation";
+// 出力Swiftファイルのディレクトリ
+const outputSwiftDirPath = "./output";
 
-// 出力QuerySwiftファイルのディレクトリ
-const outputQuerySwiftDirPath = "./output/query";
-
-// 出力MutationSwiftファイルのディレクトリ
-const outputMutationSwiftDirPath = "./output/mutation";
+// 出力Swiftファイルの名前
+const outputSwiftFileName = "GeneratedGraphQLTypes.swift";
 
 // exports
 exports.APIEndPoint = APIEndPoint;
 exports.authToken = authToken;
 exports.schemaPath = schemaPath;
-exports.inputQueryDirPath = inputQueryDirPath;
-exports.inputMutationDirPath = inputMutationDirPath;
-exports.outputQuerySwiftDirPath = outputQuerySwiftDirPath;
-exports.outputMutationSwiftDirPath = outputMutationSwiftDirPath;
+exports.inputDirPath = inputDirPath;
+exports.outputSwiftDirPath = outputSwiftDirPath;
+exports.outputSwiftFileName = outputSwiftFileName;
